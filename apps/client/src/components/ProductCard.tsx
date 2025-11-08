@@ -24,8 +24,8 @@ function ProductCard({ product }: { product: ProductType }) {
     addToCart({
       ...product,
       quantity: 1,
-      selectedSize: productType.size,
-      selectedColor: productType.color,
+      selectedSize: productType.size!,
+      selectedColor: productType.color!,
     });
     toast.success("Product added to cart");
   };
@@ -35,7 +35,7 @@ function ProductCard({ product }: { product: ProductType }) {
       <Link href={`/products/${product.id}`}>
         <div className="relative aspect-[3/2]">
           <Image
-            src={product.images[productType.color]}
+            src={product.images?.[productType.color!] || ""}
             alt={product.name}
             fill
             className="object-contain hover:scale-105 transition duration-300"
