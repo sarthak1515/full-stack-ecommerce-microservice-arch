@@ -1,5 +1,6 @@
-import { clerkPlugin, getAuth } from "@clerk/fastify";
+import { clerkPlugin } from "@clerk/fastify";
 import Fastify from "fastify";
+import { shouldBeUser } from "./middleware/authMiddleware";
 
 const fastify = Fastify({
   logger: true,
@@ -7,13 +8,11 @@ const fastify = Fastify({
 
 fastify.register(clerkPlugin);
 
-fastify.get("/test", async function handler(request, reply) {
-  const { isAuthenticated, userId } = getAuth(request);
-  console.log(userId);
-  if (!userId) {
-    return { message: "Not Authenticated" };
-  }
-  return { hello: "world" };
+fastify.get("/test", { preHandler: shouldBeUser }, (request, reply) => {
+  return reply.send({
+    message: "Order service authenticated",
+    userId: request.userId,
+  });
 });
 
 try {

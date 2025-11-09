@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-import { clerkMiddleware, getAuth } from "@clerk/express";
+import { clerkMiddleware } from "@clerk/express";
+import { shouldBeUser } from "./middleware/authMiddleware.js";
 
 const app = express();
 app.use(
@@ -11,14 +12,7 @@ app.use(
 );
 app.use(clerkMiddleware());
 
-app.get("/test", (req, res) => {
-  const { isAuthenticated, userId } = getAuth(req);
-  console.log(userId);
-  if (!userId)
-    return res.status(401).json({
-      message: "You are not logged in!",
-    });
-
+app.get("/test", shouldBeUser, (req, res) => {
   res.json({
     message: "Product service authenticated",
   });
