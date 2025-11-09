@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { clerkMiddleware, getAuth } from "@clerk/express";
 
 const app = express();
 app.use(
@@ -8,7 +9,20 @@ app.use(
     credentials: true,
   })
 );
-app.get("/");
+app.use(clerkMiddleware());
+
+app.get("/test", (req, res) => {
+  const { isAuthenticated, userId } = getAuth(req);
+  console.log(userId);
+  if (!userId)
+    return res.status(401).json({
+      message: "You are not logged in!",
+    });
+
+  res.json({
+    message: "Product service authenticated",
+  });
+});
 app.listen(8000, () => {
   console.log("Product service is running on port 8000");
 });
