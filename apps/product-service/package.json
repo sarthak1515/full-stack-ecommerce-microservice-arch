@@ -14,14 +14,14 @@
   "dependencies": {
     "@clerk/express": "^1.7.46",
     "cors": "^2.8.5",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "@repo/product-db": "workspace:*"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^20.11.17",
     "tsx": "^4.7.1",
     "typescript": "^5.8.3",
-    "@repo/product-db": "workspace:*",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5"
   }
