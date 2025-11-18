@@ -29,7 +29,35 @@ export const createProduct = async (req: Request, res: Response) => {
 export const updateProduct = async (req: Request, res: Response) => {};
 export const deleteProduct = async (req: Request, res: Response) => {};
 export const getProducts = async (req: Request, res: Response) => {
-  const products = await prisma.product.findMany();
+  const { sort, category, limit, search } = req.query;
+
+  const orderBy = (() => {
+    switch (sort) {
+      case "asc":
+        return { price: Prisma.SortOrder.asc };
+      case "desc":
+        return { price: Prisma.SortOrder.desc };
+      case "oldest":
+        return { createdAt: Prisma.SortOrder.asc };
+      default:
+        return { createdAt: Prisma.SortOrder.desc };
+        break;
+    }
+  })();
+
+  const products = await prisma.product.findMany({
+    where: {
+      category: {
+        slug: category as string,
+      },
+      name: {
+        contains: search as string,
+        mode: "insensitive",
+      },
+    },
+    orderBy,
+    take: limit ? Number(limit) : undefined,
+  });
   res.status(201).json(products);
 };
 export const getProduct = async (req: Request, res: Response) => {};
